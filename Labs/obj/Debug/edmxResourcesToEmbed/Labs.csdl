@@ -1,0 +1,148 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="BookstoreModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="Books">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Author" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Price" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="Purchase" Relationship="Self.FK_Purchase_Books" FromRole="Books" ToRole="Purchase" />
+  </EntityType>
+  <EntityType Name="Players">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Age" Type="Int32" />
+    <Property Name="Position" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="TeamId" Type="Int32" />
+    <NavigationProperty Name="Teams" Relationship="Self.FK_Players_Teams" FromRole="Players" ToRole="Teams" />
+  </EntityType>
+  <EntityType Name="Purchase">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Person" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="book_id" Type="Int32" />
+    <NavigationProperty Name="Books" Relationship="Self.FK_Purchase_Books" FromRole="Purchase" ToRole="Books" />
+  </EntityType>
+  <EntityType Name="Students">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="firstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="secondName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="middleName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="groupName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="StudentsSubject" Relationship="Self.FK_StudentsSubject_Students" FromRole="Students" ToRole="StudentsSubject" />
+  </EntityType>
+  <EntityType Name="StudentsSubject">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="id_student" Type="Int32" />
+    <Property Name="id_subject" Type="Int32" />
+    <NavigationProperty Name="Students" Relationship="Self.FK_StudentsSubject_Students" FromRole="StudentsSubject" ToRole="Students" />
+    <NavigationProperty Name="Subjects" Relationship="Self.FK_StudentsSubject_Subjects" FromRole="StudentsSubject" ToRole="Subjects" />
+  </EntityType>
+  <EntityType Name="Subjects">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="quantityHours" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="semestr" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="StudentsSubject" Relationship="Self.FK_StudentsSubject_Subjects" FromRole="Subjects" ToRole="StudentsSubject" />
+  </EntityType>
+  <EntityType Name="Teams">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Coach" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <NavigationProperty Name="Players" Relationship="Self.FK_Players_Teams" FromRole="Teams" ToRole="Players" />
+  </EntityType>
+  <Association Name="FK_Purchase_Books">
+    <End Role="Books" Type="Self.Books" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="Purchase" Type="Self.Purchase" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Books">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Purchase">
+        <PropertyRef Name="book_id" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Players_Teams">
+    <End Role="Teams" Type="Self.Teams" Multiplicity="0..1" />
+    <End Role="Players" Type="Self.Players" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Teams">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="Players">
+        <PropertyRef Name="TeamId" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_StudentsSubject_Students">
+    <End Role="Students" Type="Self.Students" Multiplicity="0..1" />
+    <End Role="StudentsSubject" Type="Self.StudentsSubject" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Students">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="StudentsSubject">
+        <PropertyRef Name="id_student" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_StudentsSubject_Subjects">
+    <End Role="Subjects" Type="Self.Subjects" Multiplicity="0..1" />
+    <End Role="StudentsSubject" Type="Self.StudentsSubject" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Subjects">
+        <PropertyRef Name="id" />
+      </Principal>
+      <Dependent Role="StudentsSubject">
+        <PropertyRef Name="id_subject" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="BookstoreEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="Books" EntityType="Self.Books" />
+    <EntitySet Name="Players" EntityType="Self.Players" />
+    <EntitySet Name="Purchase" EntityType="Self.Purchase" />
+    <EntitySet Name="Students" EntityType="Self.Students" />
+    <EntitySet Name="StudentsSubject" EntityType="Self.StudentsSubject" />
+    <EntitySet Name="Subjects" EntityType="Self.Subjects" />
+    <EntitySet Name="Teams" EntityType="Self.Teams" />
+    <AssociationSet Name="FK_Purchase_Books" Association="Self.FK_Purchase_Books">
+      <End Role="Books" EntitySet="Books" />
+      <End Role="Purchase" EntitySet="Purchase" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Players_Teams" Association="Self.FK_Players_Teams">
+      <End Role="Teams" EntitySet="Teams" />
+      <End Role="Players" EntitySet="Players" />
+    </AssociationSet>
+    <AssociationSet Name="FK_StudentsSubject_Students" Association="Self.FK_StudentsSubject_Students">
+      <End Role="Students" EntitySet="Students" />
+      <End Role="StudentsSubject" EntitySet="StudentsSubject" />
+    </AssociationSet>
+    <AssociationSet Name="FK_StudentsSubject_Subjects" Association="Self.FK_StudentsSubject_Subjects">
+      <End Role="Subjects" EntitySet="Subjects" />
+      <End Role="StudentsSubject" EntitySet="StudentsSubject" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>
